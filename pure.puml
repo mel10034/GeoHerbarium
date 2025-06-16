@@ -1,0 +1,366 @@
+@startuml
+set namespaceSeparator ::
+
+class "geolog::layers::data::source::supabase_source.dart::SupabaseSource" {
+  +SupabaseClient supabase
+  +dynamic signUp()
+  +dynamic registerProfile()
+  +dynamic loadAvatar()
+  +dynamic signIn()
+  +dynamic logOut()
+  +dynamic getMyProfile()
+  +dynamic getPlants()
+  +dynamic getGenus()
+  +dynamic getFamily()
+  +dynamic getPlantType()
+  +dynamic getLifeCycle()
+  +dynamic getHabitat()
+  +dynamic getPlant()
+  +dynamic getDeposits()
+  +dynamic removePlant()
+  +dynamic createPlantWithLocation()
+  +dynamic updatePlantWithLocation()
+  +dynamic loadModel()
+  +dynamic clearStorage()
+  +dynamic loadPlantImage()
+  +dynamic addFavorite()
+  +dynamic addMyPLace()
+  +dynamic addPlant()
+  +dynamic editPlant()
+  +dynamic removeMyPlaces()
+  +dynamic removeFavorite()
+  +dynamic getMyFavorites()
+  +dynamic getMyPLaces()
+  +dynamic getAllFamily()
+  +dynamic getAllGenus()
+  +dynamic getAllHabitats()
+  +dynamic getAllPlantTypes()
+  +dynamic getAllLifeCycle()
+}
+
+"geolog::layers::data::source::supabase_source.dart::SupabaseSource" o-- "supabase::src::supabase_client.dart::SupabaseClient"
+
+class "geolog::layers::domain::entities::favorite.dart::Favorite" {
+  +int id
+  +int plant_id
+  +String created_at
+  +String user_id
+  +int hashCode
+  +Favorite copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "geolog::layers::domain::entities::genus.dart::Ccategory" {
+  +int id
+  +String created_at
+  +String name
+  +int hashCode
+  +Ccategory copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "geolog::layers::domain::entities::geo_deposit.dart::GeoDeposit" {
+  +int id
+  +String name
+  +String description
+  +String image
+  +String icon_uri
+  +int latitude
+  +int longitude
+  +int hashCode
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +bool ==()
+}
+
+class "geolog::layers::domain::entities::geo_point.dart::GeoPoint" {
+  +String type
+  +List<dynamic> coordinates
+  +int hashCode
+  +GeoPoint copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "geolog::layers::domain::entities::locate.dart::Locate" {
+  +int id
+  +String region
+  +String country
+  +String description
+  +GeoPoint? geo_point
+  +GeoPoint? geo_polygon
+  +int plant_id
+  +int hashCode
+  +Locate copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+"geolog::layers::domain::entities::locate.dart::Locate" o-- "geolog::layers::domain::entities::geo_point.dart::GeoPoint"
+
+class "geolog::layers::domain::entities::plant.dart::Plant" {
+  +int id
+  +String created_at
+  +String model
+  +String name_ru
+  +String description
+  +String name_latin
+  +int? family
+  +int? genus
+  +int? plant_type
+  +int? life_cycle
+  +int? habitat
+  +String source
+  +String origin
+  +String created_by
+  +String image
+  +int hashCode
+  +Plant copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "geolog::layers::domain::entities::profile.dart::Profile" {
+  +String user_id
+  +String fio
+  +String? avatar
+  +int hashCode
+  +Profile copyWith()
+  +Map<String, dynamic> toMap()
+  +String toJson()
+  +String toString()
+  +bool ==()
+}
+
+class "geolog::layers::presentation::notifiers::auth_notifiers::sign_in_notifier.dart::SignInNotifier" {
+  +String email
+  +String password
+  +bool isLoading
+  +void signIn()
+  +void setLoad()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::auth_notifiers::sign_in_notifier.dart::SignInNotifier"
+
+class "geolog::layers::presentation::notifiers::auth_notifiers::sign_up_notifier.dart::SignUpNotifier" {
+  +String email
+  +String nickname
+  +String password
+  +void signUp()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::auth_notifiers::sign_up_notifier.dart::SignUpNotifier"
+
+class "geolog::layers::presentation::notifiers::auth_notifiers::sign_up_second_notifier.dart::SignUpSecondNotifier" {
+  +XFile? file
+  +Uint8List? bytes
+  +void setImage()
+  +void loadAvatar()
+}
+
+"geolog::layers::presentation::notifiers::auth_notifiers::sign_up_second_notifier.dart::SignUpSecondNotifier" o-- "cross_file::src::types::interface.dart::XFile"
+"geolog::layers::presentation::notifiers::auth_notifiers::sign_up_second_notifier.dart::SignUpSecondNotifier" o-- "dart::typed_data::Uint8List"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::auth_notifiers::sign_up_second_notifier.dart::SignUpSecondNotifier"
+
+class "geolog::layers::presentation::notifiers::common::about_plant_notifier.dart::AboutPlantNotifier" {
+  +int favoritePlant
+  +Plant? plant
+  +SupabaseSource source
+  +String genus
+  +String family
+  +String description
+  +String habitat
+  +String life_cycle
+  +String plant_type
+  +bool isDeleteLoad
+  -void _setup()
+  +void deleteLoad()
+  +void removePlant()
+}
+
+"geolog::layers::presentation::notifiers::common::about_plant_notifier.dart::AboutPlantNotifier" o-- "geolog::layers::domain::entities::plant.dart::Plant"
+"geolog::layers::presentation::notifiers::common::about_plant_notifier.dart::AboutPlantNotifier" o-- "geolog::layers::data::source::supabase_source.dart::SupabaseSource"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::about_plant_notifier.dart::AboutPlantNotifier"
+
+class "geolog::layers::presentation::notifiers::common::about_scanned_notifier.dart::AboutScannedNotifier" {
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::about_scanned_notifier.dart::AboutScannedNotifier"
+
+class "geolog::layers::presentation::notifiers::common::adress_set_notifier.dart::SetaddresspageNotifier" {
+  +YandexMapController? controller
+  +List<PlacemarkMapObject> mapObjects
+  +Point? choosedPoint
+  +DateTime startDate
+  +DateTime endDate
+  +void chooseAdress()
+}
+
+"geolog::layers::presentation::notifiers::common::adress_set_notifier.dart::SetaddresspageNotifier" o-- "yandex_mapkit::yandex_mapkit.dart::YandexMapController"
+"geolog::layers::presentation::notifiers::common::adress_set_notifier.dart::SetaddresspageNotifier" o-- "yandex_mapkit::yandex_mapkit.dart::Point"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::adress_set_notifier.dart::SetaddresspageNotifier"
+
+class "geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" {
+  +String name_ru
+  +String name_latin
+  +String source
+  +String origin
+  +String description
+  +bool isLoading
+  +String country
+  +String region
+  +String descriptionRegion
+  +Point? point
+  +String? fileName
+  +PlatformFile? pickedFile
+  +Uint8List? profileImage
+  +XFile? file
+  +ValueNotifier<String> dropFamilyValue
+  +ValueNotifier<String> dropGenusValue
+  +ValueNotifier<String> dropPLantTypeValue
+  +ValueNotifier<String> dropLifeCycleValue
+  +ValueNotifier<String> dropHabitatValue
+  +List<Ccategory> families
+  +List<Ccategory> genuses
+  +List<Ccategory> plant_types
+  +List<Ccategory> life_cycles
+  +List<Ccategory> habitats
+  +List<String> familiesStrings
+  +List<String> genusesStrings
+  +List<String> plant_typesStrings
+  +List<String> life_cyclesStrings
+  +List<String> habitatsStrings
+  +int family
+  +int genus
+  +int plant_type
+  +int life_cycle
+  +int habitat
+  -void _setup()
+  +void notify()
+  +void setPoint()
+  +void setLoad()
+  +void pickImage()
+  +dynamic createPlant()
+  +dynamic pickFile()
+}
+
+"geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" o-- "yandex_mapkit::yandex_mapkit.dart::Point"
+"geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" o-- "file_picker::src::platform_file.dart::PlatformFile"
+"geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" o-- "dart::typed_data::Uint8List"
+"geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" o-- "cross_file::src::types::interface.dart::XFile"
+"geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<String>"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::create_plant_page_notifier.dart::CreatePlantPageNotifier"
+
+class "geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" {
+  +String name_ru
+  +String name_latin
+  +String source
+  +String origin
+  +String description
+  +bool isLoading
+  +String country
+  +String region
+  +String descriptionRegion
+  +Point? point
+  +String? fileName
+  +PlatformFile? pickedFile
+  +Uint8List? profileImage
+  +XFile? file
+  +ValueNotifier<String> dropFamilyValue
+  +ValueNotifier<String> dropGenusValue
+  +ValueNotifier<String> dropPLantTypeValue
+  +ValueNotifier<String> dropLifeCycleValue
+  +ValueNotifier<String> dropHabitatValue
+  +List<Ccategory> families
+  +List<Ccategory> genuses
+  +List<Ccategory> plant_types
+  +List<Ccategory> life_cycles
+  +List<Ccategory> habitats
+  +List<String> familiesStrings
+  +List<String> genusesStrings
+  +List<String> plant_typesStrings
+  +List<String> life_cyclesStrings
+  +List<String> habitatsStrings
+  +int family
+  +int genus
+  +int plant_type
+  +int life_cycle
+  +int habitat
+  +Plant plant
+  -void _setup()
+  +void setPoint()
+  +void setLoad()
+  +void pickImage()
+  +void notify()
+  +dynamic editPlant()
+  +dynamic pickFile()
+}
+
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "yandex_mapkit::yandex_mapkit.dart::Point"
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "file_picker::src::platform_file.dart::PlatformFile"
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "dart::typed_data::Uint8List"
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "cross_file::src::types::interface.dart::XFile"
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "flutter::src::foundation::change_notifier.dart::ValueNotifier<String>"
+"geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier" o-- "geolog::layers::domain::entities::plant.dart::Plant"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::edit_plant_notifier.dart::EditPlantNotifier"
+
+class "geolog::layers::presentation::notifiers::common::home_notifier.dart::HomeNotifier" {
+  +List<Plant> plants
+  +List<Favorite> favorites
+  +bool isLoading
+  -void _setup()
+  +void addFavorite()
+  +void setLoad()
+  +void removeFavorite()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::home_notifier.dart::HomeNotifier"
+
+class "geolog::layers::presentation::notifiers::common::location_notifier.dart::LocationNotifier" {
+  +Locate? deposit
+  +List<Locate> deposits
+  +List<GeoDeposit> myPlaces
+  +YandexMapController? controller
+  +int plantId
+  +Plant? plant
+  +List<MapObject<dynamic>> points
+  -void _setup()
+  +void close()
+  +void addMyPlaces()
+  +void removeMyPlaces()
+}
+
+"geolog::layers::presentation::notifiers::common::location_notifier.dart::LocationNotifier" o-- "geolog::layers::domain::entities::locate.dart::Locate"
+"geolog::layers::presentation::notifiers::common::location_notifier.dart::LocationNotifier" o-- "yandex_mapkit::yandex_mapkit.dart::YandexMapController"
+"geolog::layers::presentation::notifiers::common::location_notifier.dart::LocationNotifier" o-- "geolog::layers::domain::entities::plant.dart::Plant"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "geolog::layers::presentation::notifiers::common::location_notifier.dart::LocationNotifier"
+
+class "geolog::layers::presentation::notifiers::common::profile_notifier.dart::ProfileNotifier" {
+  -Profile? _profile
+  +String nickname
+  +Uint8List? bytes
+  +List<GeoDeposit> myPlaces
+  +List<Favorite> favorites
+  +List<Plant> myFavorites
+  +bool isLoading
+  -void _setup()
+  +void setLoad()
+  +void logOut()
+  +void removeFavorite()
+  +void removeMyPlace()
+}
+
+
+@enduml
