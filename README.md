@@ -1,4 +1,4 @@
-# geolog
+# GeoHerbarium
 
 A new Flutter project.
 
